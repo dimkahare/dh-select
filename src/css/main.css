@@ -1,0 +1,62 @@
+/*
+body {
+    background: #333;
+    color: #fff;
+}
+
+#d {
+    float: left;
+    width: 300px;
+}
+
+.dh-select-list {
+    float: left;
+    width: 100%;
+}
+
+label {
+    cursor: pointer;
+}
+
+ul {
+    float: right;
+    display: block;
+    border: solid 1px #ddd;
+    width: 90%;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    float: right;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+
+input {
+    display: none;
+}
+
+input:checked + label {
+    font-weight: bold;
+}
+
+label {
+    float: left;
+    display: block;
+    width: 100%;
+    height: 40px;
+    border: solid 1px #ddd;
+}
+
+li.dh-have-sub-list {
+    color: green;
+}
+
+li.dh-have-sub-list.collapsed {
+    color: red;
+}
+*/

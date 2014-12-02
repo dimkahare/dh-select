@@ -1,0 +1,26 @@
+{
+  "name": "dh-select",
+  "version": "0.0.1",
+  "homepage": "https://github.com/dimkahare/dh-select",
+  "authors": [
+    "Dmitry Gorlov <dimkahare@gmail.com>"
+  ],
+  "description": "Dropdown with search",
+  "main": "index.html",
+  "keywords": [
+    "amd",
+    "select"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "requirejs": "~2.1.15"
+  }
+}
