@@ -2,138 +2,176 @@ define(
     'dh-select',
     [],
     function () {
-        var console = getCustomConsole(true),
-            classes = {
-                collapsed: 'collapsed',
-                hasChildren: 'has-children'
-            },
-            options = {
-                name: 'unnamed-control'
-            },
-            API = {
-                init: initialize
-            },
-            data = [],
-            $control = null,
-            $list = null;
+        var console = getCustomConsole(true);
 
-        return API;
+        return Control;
 
-        function initialize($target, customData, customOptions) {
-            data = customData || data;
-            extend(options, customOptions);
+        function Control($target, data, options) {
+            var that = this,
+                $control,
+                list;
 
-            $target.empty();
-            $control = renderControl();
-            $control
-                .on('click', showList);
-            $target.append($control);
-        }
-
-        function renderControl() {
-            var $control = $('<input>', {
-                type: 'text',
-                class: 'dh-select-input'
+            extend(options, {
+                valueChangedCallback: valueChangedEvent
             });
+            list = new List(options, data);
+            $control = render();
+            setEvents($control, list);
 
-            return $control;
-        }
+            $target.html($control);
+            $target.append(list.render());
 
-        function showList() {
-            if (!$list) {
-                $list = renderList(options.name, data);
-                $list
-                    .find('label')
-                        .on('click', listItemClickEvent)
-                        .on('dblclick', listItemDblClickEvent);
-                $list.insertAfter($control);
-                collapseAll();
+            that.$el = $control;
+
+            function render() {
+                var $control = $('<input>', {
+                    type: 'text',
+                    class: 'dh-select-input'
+                });
+
+                return $control;
+            }
+
+            function setEvents($control, list) {
+                $control.on('click', showList);
+            }
+
+            function showList() {
+                list.show();
+            }
+
+            function valueChangedEvent(value) {
+                $control.val(value ? value.title : '');
+                setTimeout(function () {
+                    $control.trigger('change');
+                }, 1);
             }
         }
 
-        function hideList() {
-            if (!!$list) {
-                $list.remove();
-                $list = null;
-            }
-        }
+        function List(options, userData) {
+            var that = this,
+                classes = {
+                    collapsed: 'collapsed',
+                    hasChildren: 'has-children'
+                },
+                data = userData || [],
+                $that;
 
-        function listItemClickEvent(e) {
-            var $input = $list.find('#' + $(e.target).attr('for')),
-                valueId = parseInt($input.val(), 10),
-                value = getValueById(valueId, data);
+            that.render = function ($control) {
+                if (typeof $that !== 'undefined') {
+                    console.warn('List is already rendered.');
+                    return;
+                }
 
-            $input.siblings('ul').toggleClass(classes.collapsed);
-            if (typeof value.childs === 'undefined') {
-                hideList();
-            }
-            setCurrentValue(value);
-        }
+                $that = renderList(options.name, data);
+                $that.hide();
+                $that = setListEvents($that);
 
-        function listItemDblClickEvent(e) {
-            hideList();
-        }
+                return $that;
+            };
 
-        function setCurrentValue(value) {
-            $control.val(value ? value.title : '');
-        }
+            that.show = function () {
+                if (typeof $that === 'undefined') {
+                    console.error('List is not rendered yet. Call "render" method before "show".');
+                }
+                $that.show();
+            };
 
-        function getValueById(id, data) {
-            var node,
-                result = null;
+            that.hideList = function () {
+                $that.hide();
+            };
 
-            for (var i = 0; i < data.length; i++) {
-                node = data[i];
-                if (node.value === id) {
-                    result = node;
-                } else if (node.childs) {
-                    result = result || getValueById(id, node.childs);
+            that.setCurrentValue = function (id) {
+                console.warn('Not implemented yet.');
+            };
+
+            function renderList(name, list) {
+                var $ul, $li;
+
+                $ul = $('<ul>', {
+                    class: 'dh-select-list'
+                });
+                for (var i = 0; i < list.length; i++) {
+                    $li = $('<li>');
+                    $li.html(getListItem(name, list[i].value, list[i].title));
+                    if (list[i].childs) {
+                        $li.addClass(classes.hasChildren);
+                        $li.append( renderList(name, list[i].childs));
+                    }
+                    $ul.append($li);
+                }
+
+                collapseAll($ul);
+
+                return $ul;
+
+                function getListItem(name, value, label) {
+                    return getInput(name, value) + getLabel(name, value, label);
+
+                    function getInput(name, value) {
+                        return '<input name="' + name + '"' +
+                        ' id="' + getControlId(name, value) + '"' +
+                        ' value="' + value + '"' +
+                        ' type="radio"></input>';
+                    }
+
+                    function getLabel(name, value, label) {
+                        return '<label for="' + getControlId(name, value) + '">' + label + ' (' + value + ')' + '</label>';
+                    }
+
+                    function getControlId(name, value) {
+                        return name + '_' + value;
+                    }
                 }
             }
 
-            return result;
-        }
+            function setListEvents($list) {
+                $list.find('label')
+                    .on('click', listItemClickEvent)
+                    .on('dblclick', listItemDblClickEvent);
 
-        function renderList(name, list) {
-            var $ul, $li;
+                return $list;
 
-            $ul = $('<ul>', {
-                class: 'dh-select-list'
-            });
-            for (var i = 0; i < list.length; i++) {
-                $li = $('<li>');
-                $li.html(getListItem(name, list[i].value, list[i].title));
-                if (list[i].childs) {
-                    $li.addClass(classes.hasChildren);
-                    $li.append( renderList(name, list[i].childs));
-                }
-                $ul.append($li);
-            }
+                function listItemClickEvent(e) {
+                    var $input = $list.find('#' + $(e.target).attr('for')),
+                        valueId = parseInt($input.val(), 10),
+                        value = getValueById(valueId, data);
 
-            return $ul;
+                    $input.siblings('ul').toggleClass(classes.collapsed);
+                    if (typeof value.childs === 'undefined') {
+                        that.hideList();
+                    }
 
-            function getListItem(name, value, label) {
-                return getInput(name, value) + getLabel(name, value, label);
-
-                function getInput(name, value) {
-                    return '<input name="' + name + '"' +
-                    ' id="' + getControlId(name, value) + '"' +
-                    ' value="' + value + '"' +
-                    ' type="radio"></input>';
+                    options.valueChangedCallback({
+                        value: value.value,
+                        title: value.title
+                    });
                 }
 
-                function getLabel(name, value, label) {
-                    return '<label for="' + getControlId(name, value) + '">' + label + ' (' + value + ')' + '</label>';
-                }
-
-                function getControlId(name, value) {
-                    return name + '_' + value;
+                function listItemDblClickEvent(e) {
+                    that.hideList();
                 }
             }
-        }
 
-        function collapseAll() {
-            $list.find('ul').addClass(classes.collapsed);
+            function collapseAll($list) {
+                $list.find('ul').addClass(classes.collapsed);
+            }
+
+            function getValueById(id, data) {
+                var node,
+                    result = null;
+
+                for (var i = 0; i < data.length; i++) {
+                    node = data[i];
+                    if (node.value === id) {
+                        result = node;
+                    } else if (node.childs) {
+                        result = result || getValueById(id, node.childs);
+                    }
+                }
+
+                return result;
+            }
         }
 
         function extend(obj1, obj2) {

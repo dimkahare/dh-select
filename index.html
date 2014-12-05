@@ -9,20 +9,25 @@
     <script src="src/js/dh-select.js"></script>
 </head>
 <body>
-<div id="select-place"></div>
+<form id="select-place"></form>
 <div>sdfgsdfgs</div>
 <script>
-    require(['dh-select'], function (dhSelect) {
+    require(['dh-select'], function (DhSelect) {
         var data = getData(),
             options = {
                 name: 'category'
-            };
+            },
+                dhSelect;
 
-        dhSelect.init(
+        dhSelect = new DhSelect(
             $('#select-place'),
             data,
             options
         );
+
+        dhSelect.$el.on('change', function (e) {
+            console.log($('#select-place').serialize());
+        });
 
         function getData() {
             return [

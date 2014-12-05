@@ -28,7 +28,8 @@
 }
 
 .dh-select-list li > input {
-    display: none;
+    position: absolute;
+    visibility: hidden;
 }
 
 .dh-select-list li > label {
