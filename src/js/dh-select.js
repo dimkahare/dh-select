@@ -2,13 +2,20 @@ define(
     'dh-select',
     [],
     function () {
-        var options = {
+        var console = getCustomConsole(true),
+            classes = {
+                collapsed: 'collapsed',
+                hasChildren: 'has-children'
+            },
+            options = {
                 name: 'unnamed-control'
             },
             API = {
                 init: initialize
             },
-            data = [];
+            data = [],
+            $control = null,
+            $list = null;
 
         return API;
 
@@ -17,27 +24,88 @@ define(
             extend(options, customOptions);
 
             $target.empty();
-            $target.append(renderList(options.name, data));
+            $control = renderControl();
+            $control
+                .on('click', showList);
+            $target.append($control);
+        }
 
+        function renderControl() {
+            var $control = $('<input>', {
+                type: 'text',
+                class: 'dh-select-input'
+            });
+
+            return $control;
+        }
+
+        function showList() {
+            if (!$list) {
+                $list = renderList(options.name, data);
+                $list
+                    .find('label')
+                        .on('click', listItemClickEvent)
+                        .on('dblclick', listItemDblClickEvent);
+                $list.insertAfter($control);
+                collapseAll();
+            }
+        }
+
+        function hideList() {
+            if (!!$list) {
+                $list.remove();
+                $list = null;
+            }
+        }
+
+        function listItemClickEvent(e) {
+            var $input = $list.find('#' + $(e.target).attr('for')),
+                valueId = parseInt($input.val(), 10),
+                value = getValueById(valueId, data);
+
+            $input.siblings('ul').toggleClass(classes.collapsed);
+            if (typeof value.childs === 'undefined') {
+                hideList();
+            }
+            setCurrentValue(value);
+        }
+
+        function listItemDblClickEvent(e) {
+            hideList();
+        }
+
+        function setCurrentValue(value) {
+            $control.val(value ? value.title : '');
+        }
+
+        function getValueById(id, data) {
+            var node,
+                result = null;
+
+            for (var i = 0; i < data.length; i++) {
+                node = data[i];
+                if (node.value === id) {
+                    result = node;
+                } else if (node.childs) {
+                    result = result || getValueById(id, node.childs);
+                }
+            }
+
+            return result;
         }
 
         function renderList(name, list) {
             var $ul, $li;
 
-            $ul = $('<ul>')
+            $ul = $('<ul>', {
+                class: 'dh-select-list'
+            });
             for (var i = 0; i < list.length; i++) {
                 $li = $('<li>');
                 $li.html(getListItem(name, list[i].value, list[i].title));
                 if (list[i].childs) {
-                    /*
-                    $li
-                        .addClass('dh-have-sub-list')
-                        .addClass('collapsed');
-                    */
+                    $li.addClass(classes.hasChildren);
                     $li.append( renderList(name, list[i].childs));
-                    /*
-                    $li.children('ul').hide()
-                    */
                 }
                 $ul.append($li);
             }
@@ -64,6 +132,10 @@ define(
             }
         }
 
+        function collapseAll() {
+            $list.find('ul').addClass(classes.collapsed);
+        }
+
         function extend(obj1, obj2) {
             for (var key in obj2) {
                 if (obj2.hasOwnProperty(key)) {
@@ -73,18 +145,26 @@ define(
 
             return obj1;
         }
+
+        function getCustomConsole(enabled) {
+            var c = window.console,
+                console = {
+                    enabled: enabled
+                };
+
+            for (var key in c) {
+                if (typeof c[key] === 'function') {
+                    console[key] = (function (key) {
+                        return function () {
+                            if (this.enabled) {
+                                c[key].apply(c, arguments);
+                            }
+                        };
+                    })(key);
+                }
+            }
+
+            return console;
+        }
     }
 );
-
-/*
-var dhSelect = (function () {
-
-    function setSliders($target) {
-        $target.find('label').on('click', function (e) {
-            $(e.target).closest('li').toggleClass('collapsed');
-            $(e.target).next('ul').slideToggle();
-        });
-    }
-})();
-
-*/

@@ -10,6 +10,7 @@
 </head>
 <body>
 <div id="select-place"></div>
+<div>sdfgsdfgs</div>
 <script>
     require(['dh-select'], function (dhSelect) {
         var data = getData(),
@@ -27,43 +28,117 @@
             return [
                 {
                     value: 1,
-                    title: 'Category 1'
-                },
-                {
-                    value: 2,
-                    title: 'Category 2',
+                    title: 'Расходы',
                     childs: [
                         {
-                            value: 3,
-                            title: 'Category 2.1'
+                            value: 11,
+                            title: 'Отпускные'
                         },
                         {
-                            value: 4,
-                            title: 'Category 2.2'
-                        },
-                        {
-                            value: 5,
-                            title: 'Category 2.3',
+                            value: 12,
+                            title: 'Питание',
                             childs: [
                                 {
-                                    value: 6,
-                                    title: 'Category 2.1'
+                                    value: 121,
+                                    title: 'Питание дома'
                                 },
                                 {
-                                    value: 7,
-                                    title: 'Category 2.2'
-                                },
-                                {
-                                    value: 8,
-                                    title: 'Category 2.3'
+                                    value: 122,
+                                    title: 'Питание вне дома'
                                 }
                             ]
+                        },
+                        {
+                            value: 13,
+                            title: 'Подарки, материальная помощь'
+                        },
+                        {
+                            value: 14,
+                            title: 'Приобретение квартиры'
+                        },
+                        {
+                            value: 15,
+                            title: 'Проезд, транспорт',
+                            childs: [
+                                {
+                                    value: 151,
+                                    title: 'Общественный транспорт'
+                                }
+                            ]
+                        },
+                        {
+                            value: 16,
+                            title: 'Прочие личные расходы'
+                        },
+                        {
+                            value: 17,
+                            title: 'Расходы по работе'
+                        },
+                        {
+                            value: 18,
+                            title: 'Связь, ТВ и интернет',
+                            childs: [
+                                {
+                                    value: 181,
+                                    title: 'Городской телефон'
+                                },
+                                {
+                                    value: 182,
+                                    title: 'Интернет и ТВ'
+                                },
+                                {
+                                    value: 183,
+                                    title: 'Сотовый телефон'
+                                }
+                            ]
+                        },
+                        {
+                            value: 19,
+                            title: 'Спорт',
+                            childs: [
+                                {
+                                    value: 191,
+                                    title: 'Спортивное питание'
+                                },
+                                {
+                                    value: 192,
+                                    title: 'Спортивный инвентарь'
+                                }
+                            ]
+                        },
+                        {
+                            value: 110,
+                            title: 'Уход за собой'
                         }
                     ]
                 },
                 {
-                    value: 9,
-                    title: 'Category 3'
+                    value: 2,
+                    title: 'Доходы',
+                    childs: [
+                        {
+                            value: 21,
+                            title: 'Персональные доходы',
+                            childs: [
+                                {
+                                    value: 211,
+                                    title: 'Бонусы и премии'
+                                },
+                                {
+                                    value: 212,
+                                    title: 'Заработная плата'
+                                },
+                                {
+                                    value: 213,
+                                    title: 'Сверхурочное время'
+                                }
+                            ]
+                        },
+                        {
+                            value: 22,
+                            title: 'Прочие доходы'
+                        }
+                    ]
                 }
             ];
         }

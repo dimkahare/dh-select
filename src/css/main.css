@@ -1,3 +1,53 @@
+#select-place {
+    width: 250px;
+}
+
+/*------------------------*/
+
+.dh-select-input {
+    width: 100%;
+    padding: 5px 10px;
+    box-sizing: border-box;
+}
+
+.dh-select-list,
+.dh-select-list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dh-select-list ul {
+    padding-left: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dh-select-list li {
+    width: 100%;
+}
+
+.dh-select-list li > input {
+    display: none;
+}
+
+.dh-select-list li > label {
+    border: solid 1px #aaa;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    box-sizing: border-box;
+}
+
+.dh-select-list .collapsed {
+    display: none;
+}
+
+.dh-select-list .has-children > label {
+    font-weight: bold;
+}
+
 /*
 body {
     background: #333;
