@@ -33,11 +33,15 @@ define(
             }
 
             function setEvents($control, list) {
-                $control.on('click', showList);
+                $control.on('click', toggleList);
             }
 
-            function showList() {
-                list.show();
+            function toggleList() {
+                if (list.isShown) {
+                    list.hide();
+                } else {
+                    list.show();
+                }
             }
 
             function valueChangedEvent(value) {
@@ -57,6 +61,8 @@ define(
                 data = userData || [],
                 $that;
 
+            that.isShown = false;
+
             that.render = function ($control) {
                 if (typeof $that !== 'undefined') {
                     console.warn('List is already rendered.');
@@ -74,11 +80,18 @@ define(
                 if (typeof $that === 'undefined') {
                     console.error('List is not rendered yet. Call "render" method before "show".');
                 }
+                that.collapseAll();
                 $that.show();
+                that.isShown = true;
             };
 
-            that.hideList = function () {
+            that.collapseAll = function () {
+                $that.find('ul').addClass(classes.collapsed);
+            };
+
+            that.hide = function () {
                 $that.hide();
+                that.isShown = false;
             };
 
             that.setCurrentValue = function (id) {
@@ -139,7 +152,7 @@ define(
 
                     $input.siblings('ul').toggleClass(classes.collapsed);
                     if (typeof value.childs === 'undefined') {
-                        that.hideList();
+                        that.hide();
                     }
 
                     options.valueChangedCallback({
@@ -149,7 +162,7 @@ define(
                 }
 
                 function listItemDblClickEvent(e) {
-                    that.hideList();
+                    that.hide();
                 }
             }
 
