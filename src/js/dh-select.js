@@ -70,7 +70,8 @@ define(
                 }
 
                 $that = renderList(options.name, data);
-                $that.hide();
+                that.hide();
+                that.collapseAll();
                 $that = setListEvents($that);
 
                 return $that;
@@ -86,7 +87,7 @@ define(
             };
 
             that.collapseAll = function () {
-                $that.find('ul').addClass(classes.collapsed);
+                $that.find('.has-children').addClass(classes.collapsed);
             };
 
             that.hide = function () {
@@ -109,12 +110,10 @@ define(
                     $li.html(getListItem(name, list[i].value, list[i].title));
                     if (list[i].childs) {
                         $li.addClass(classes.hasChildren);
-                        $li.append( renderList(name, list[i].childs));
+                        $li.append(renderList(name, list[i].childs));
                     }
                     $ul.append($li);
                 }
-
-                collapseAll($ul);
 
                 return $ul;
 
@@ -150,7 +149,7 @@ define(
                         valueId = parseInt($input.val(), 10),
                         value = getValueById(valueId, data);
 
-                    $input.siblings('ul').toggleClass(classes.collapsed);
+                    $input.closest('li').toggleClass(classes.collapsed);
                     if (typeof value.childs === 'undefined') {
                         that.hide();
                     }
@@ -164,10 +163,6 @@ define(
                 function listItemDblClickEvent(e) {
                     that.hide();
                 }
-            }
-
-            function collapseAll($list) {
-                $list.find('ul').addClass(classes.collapsed);
             }
 
             function getValueById(id, data) {
