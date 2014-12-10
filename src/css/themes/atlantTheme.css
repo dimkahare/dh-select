@@ -1,3 +1,21 @@
+.dh-select-input-wrapper:after {
+    border-bottom: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid;
+    content: " ";
+    display: inline-block;
+    float: right;
+    height: 0;
+    left: -12px;
+    margin-left: -20px;
+    margin-top: 2px;
+    position: relative;
+    top: 10px;
+    vertical-align: middle;
+    width: 0;
+}
+
 .dh-select-input {
     background-color: #fff;
     border: solid 1px #ddd;
