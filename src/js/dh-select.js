@@ -8,6 +8,7 @@ define(
 
         function Control($target, data, options) {
             var that = this,
+                $wrapper,
                 $control,
                 list;
 
@@ -15,21 +16,27 @@ define(
                 valueChangedCallback: valueChangedEvent
             });
             list = new List(options, data);
-            $control = render();
+            $wrapper = render();
+            $control = $wrapper.find('.dh-select-input');
             setEvents($control, list);
 
-            $target.html($control);
+            $target.html($wrapper);
             $target.append(list.render());
 
             that.$el = $control;
 
             function render() {
                 var $control = $('<input>', {
-                    type: 'text',
-                    class: 'dh-select-input'
-                });
+                        type: 'text',
+                        class: 'dh-select-input'
+                    }),
+                    $wrapper = $('<div>', {
+                        class: 'dh-select-input-wrapper'
+                    });
 
-                return $control;
+                $wrapper.html($control);
+
+                return $wrapper;
             }
 
             function setEvents($control, list) {
