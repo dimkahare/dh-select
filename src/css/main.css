@@ -48,3 +48,11 @@
 .dh-select-list .has-children > label {
     font-weight: bold;
 }
+
+.dh-select-list .hidden {
+    display: none;
+}
+
+.dh-select-list .underlined {
+    text-decoration: underline;
+}
