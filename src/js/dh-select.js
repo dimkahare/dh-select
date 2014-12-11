@@ -40,15 +40,50 @@ define(
             }
 
             function setEvents($control, list) {
-                $control.on('click', toggleList);
+                $control
+                    .on('click', toggleList)
+                    .on('click', selectValue)
+                    .on('keypress', setFilter)
+                    .on('keyup', updateFilter);
             }
 
             function toggleList() {
                 if (list.isShown) {
                     list.hide();
                 } else {
+                    list.clearFilter();
+                    list.collapseAll();
                     list.show();
                 }
+            }
+
+            function selectValue(e) {
+                e.target.setSelectionRange(0, e.target.value.length);
+            }
+
+            function setFilter(e) {
+                var currentValueString = $control.val() + String.fromCharCode(e.keyCode);
+
+                if (currentValueString) {
+                    list.setFilter(currentValueString);
+                } else {
+                    list.clearFilter();
+                    list.collapseAll();
+                }
+
+                list.show();
+            }
+
+            function updateFilter() {
+                var currentValueString = $control.val();
+
+                if (currentValueString) {
+                    list.setFilter(currentValueString);
+                } else {
+                    list.clearFilter();
+                    list.collapseAll();
+                }
+                list.show();
             }
 
             function valueChangedEvent(value) {
@@ -63,7 +98,9 @@ define(
             var that = this,
                 classes = {
                     collapsed: 'collapsed',
-                    hasChildren: 'has-children'
+                    hasChildren: 'has-children',
+                    hidden: 'hidden',
+                    underlined: 'underlined'
                 },
                 data = userData || [],
                 $that;
@@ -88,13 +125,17 @@ define(
                 if (typeof $that === 'undefined') {
                     console.error('List is not rendered yet. Call "render" method before "show".');
                 }
-                that.collapseAll();
+
                 $that.show();
                 that.isShown = true;
             };
 
             that.collapseAll = function () {
                 $that.find('.has-children').addClass(classes.collapsed);
+            };
+
+            that.expandAll = function () {
+                $that.find('.' + classes.collapsed).removeClass(classes.collapsed);
             };
 
             that.hide = function () {
@@ -104,6 +145,42 @@ define(
 
             that.setCurrentValue = function (id) {
                 console.warn('Not implemented yet.');
+            };
+
+            that.setFilter = function (string) {
+                that.clearFilter();
+                that.expandAll();
+                $that.find('li').addClass(classes.hidden);
+                $that.find('label').each(function (indx, el) {
+                    var $el = $(el),
+                        elText = $el.text(),
+                        textIndx = elText.toLowerCase().indexOf(string.toLowerCase());
+
+                    if (textIndx !== -1) {
+                        $el.removeClass(classes.hidden);
+                        $el.parents('li').removeClass(classes.hidden);
+                        $el.html(highlightOverlap(elText, string));
+                    }
+                });
+
+                function highlightOverlap(elText, string) {
+                    var textIndx = elText.toLowerCase().indexOf(string.toLowerCase()),
+                        overlappedText = elText.substr(textIndx, string.length);
+
+                    return elText.replace(overlappedText, '<span class="' + classes.underlined + '">' + overlappedText + '</span>');
+                }
+            };
+
+            that.clearFilter = function () {
+                $that.find('li').removeClass(classes.hidden);
+                $that.find('label').each(function (indx, el) {
+                    $(el)
+                        .removeClass(classes.hidden)
+                        .html($(el).html()
+                            .replace('<span class="' + classes.underlined + '">', '')
+                            .replace('</span>', '')
+                        );
+                });
             };
 
             function renderList(name, list) {
