@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="src/css/main.css">
     <link rel="stylesheet" href="src/css/themes/atlantTheme.css">
 
@@ -10,27 +11,62 @@
     <script src="src/js/dh-select.js"></script>
 </head>
 <body>
-<form id="select-place"></form>
-<div>sdfgsdfgs</div>
+<div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form id="test-form" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Счет
+                    </label>
+                    <div id="count" class="col-sm-2"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        Категория
+                    </label>
+                    <div id="category" class="col-sm-4"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-8 col-md-offset-2">
+    <div class="jumbotron">
+        <div class="col-md-12">
+            <p id="form-string"></p>
+        </div>
+    </div>
+</div>
 <script>
     require(['dh-select'], function (DhSelect) {
-        var data = getData(),
-            options = {
-                name: 'category'
-            },
-                dhSelect;
+        var categorySelect,
+            countSelect;
 
-        dhSelect = new DhSelect(
-            $('#select-place'),
-            data,
-            options
+        categorySelect = new DhSelect(
+            $('#category'),
+            getCategoriesData(),
+            {
+                name: 'category'
+            }
         );
 
-        dhSelect.$el.on('change', function (e) {
-            console.log($('#select-place').serialize());
-        });
+        countSelect = new DhSelect(
+            $('#count'),
+            getCountData(),
+            {
+                name: 'count'
+            }
+        );
 
-        function getData() {
+        categorySelect.$el.on('change', getFormString);
+        countSelect.$el.on('change', getFormString);
+
+        function getFormString() {
+            $('#form-string').text($('#test-form').serialize());
+        }
+
+        function getCategoriesData() {
             return [
                 {
                     value: 1,
@@ -145,6 +181,23 @@
                             title: 'Прочие доходы'
                         }
                     ]
+                }
+            ];
+        }
+
+        function getCountData() {
+            return [
+                {
+                    value: 1,
+                    title: 'Кошелек'
+                },
+                {
+                    value: 2,
+                    title: 'Карта Сбербанк'
+                },
+                {
+                    value: 3,
+                    title: 'Карта Альфа-банк'
                 }
             ];
         }

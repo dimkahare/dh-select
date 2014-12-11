@@ -21,7 +21,11 @@ define(
             setEvents($control, list);
 
             $target.html($wrapper);
-            $target.append(list.render());
+            $target.append(list.render(
+                $control.width() +
+                parseInt($control.css('padding-left'), 10) +
+                parseInt($control.css('padding-right'), 10)
+            ));
 
             that.$el = $control;
 
@@ -100,14 +104,17 @@ define(
                     collapsed: 'collapsed',
                     hasChildren: 'has-children',
                     hidden: 'hidden',
-                    underlined: 'underlined'
+                    underlined: 'underlined',
+                    wrapper: 'dh-select-list-wrapper'
                 },
                 data = userData || [],
                 $that;
 
             that.isShown = false;
 
-            that.render = function ($control) {
+            that.render = function (width) {
+                var $wrapper;
+
                 if (typeof $that !== 'undefined') {
                     console.warn('List is already rendered.');
                     return;
@@ -118,7 +125,16 @@ define(
                 that.collapseAll();
                 $that = setListEvents($that);
 
-                return $that;
+                $wrapper = $('<div>', {
+                    class: classes.wrapper
+                });
+                $wrapper
+                    .html($that)
+                    .width(width);
+
+                console.log(width);
+
+                return $wrapper;
             };
 
             that.show = function () {
@@ -212,7 +228,7 @@ define(
                     }
 
                     function getLabel(name, value, label) {
-                        return '<label for="' + getControlId(name, value) + '">' + label + ' (' + value + ')' + '</label>';
+                        return '<label for="' + getControlId(name, value) + '">' + label + '</label>';
                     }
 
                     function getControlId(name, value) {
