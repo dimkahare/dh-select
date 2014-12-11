@@ -98,3 +98,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+.dh-select-list-wrapper {
+    margin-top: 5px;
+}
