@@ -2,12 +2,14 @@ define(
     'dh-select',
     [],
     function () {
-        var console = getCustomConsole(true);
-
         return Control;
 
         function Control($target, data, options) {
-            var that = this,
+            var classes = {
+                    input: 'dh-select-input',
+                    wrapper: 'dh-select-input-wrapper'
+                },
+                that = this,
                 $wrapper,
                 $control,
                 list;
@@ -17,7 +19,7 @@ define(
             });
             list = new List(options, data);
             $wrapper = render();
-            $control = $wrapper.find('.dh-select-input');
+            $control = $wrapper.find('.' + classes.input);
             setEvents($control, list);
 
             $target.html($wrapper);
@@ -32,10 +34,10 @@ define(
             function render() {
                 var $control = $('<input>', {
                         type: 'text',
-                        class: 'dh-select-input'
+                        class: classes.input
                     }),
                     $wrapper = $('<div>', {
-                        class: 'dh-select-input-wrapper'
+                        class: classes.wrapper
                     });
 
                 $wrapper.html($control);
@@ -104,6 +106,7 @@ define(
                     collapsed: 'collapsed',
                     hasChildren: 'has-children',
                     hidden: 'hidden',
+                    list: 'dh-select-list',
                     underlined: 'underlined',
                     wrapper: 'dh-select-list-wrapper'
                 },
@@ -116,7 +119,6 @@ define(
                 var $wrapper;
 
                 if (typeof $that !== 'undefined') {
-                    console.warn('List is already rendered.');
                     return;
                 }
 
@@ -132,14 +134,12 @@ define(
                     .html($that)
                     .width(width);
 
-                console.log(width);
-
                 return $wrapper;
             };
 
             that.show = function () {
                 if (typeof $that === 'undefined') {
-                    console.error('List is not rendered yet. Call "render" method before "show".');
+                    return;
                 }
 
                 $that.show();
@@ -147,7 +147,7 @@ define(
             };
 
             that.collapseAll = function () {
-                $that.find('.has-children').addClass(classes.collapsed);
+                $that.find('.' + classes.hasChildren).addClass(classes.collapsed);
             };
 
             that.expandAll = function () {
@@ -160,7 +160,7 @@ define(
             };
 
             that.setCurrentValue = function (id) {
-                console.warn('Not implemented yet.');
+
             };
 
             that.setFilter = function (string) {
@@ -203,7 +203,7 @@ define(
                 var $ul, $li;
 
                 $ul = $('<ul>', {
-                    class: 'dh-select-list'
+                    class: classes.list
                 });
                 for (var i = 0; i < list.length; i++) {
                     $li = $('<li>');
@@ -290,27 +290,6 @@ define(
             }
 
             return obj1;
-        }
-
-        function getCustomConsole(enabled) {
-            var c = window.console,
-                console = {
-                    enabled: enabled
-                };
-
-            for (var key in c) {
-                if (typeof c[key] === 'function') {
-                    console[key] = (function (key) {
-                        return function () {
-                            if (this.enabled) {
-                                c[key].apply(c, arguments);
-                            }
-                        };
-                    })(key);
-                }
-            }
-
-            return console;
         }
     }
 );
