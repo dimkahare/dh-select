@@ -2,6 +2,18 @@ define(
     'dh-select',
     [],
     function () {
+        var guid = (function() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return function() {
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+            };
+        })();
+
         return Control;
 
         function Control($target, data, options) {
@@ -10,6 +22,7 @@ define(
                     wrapper: 'dh-select-input-wrapper'
                 },
                 that = this,
+                id = guid(),
                 $wrapper,
                 $control,
                 list;
@@ -19,6 +32,7 @@ define(
             });
             list = new List(options, data);
             $wrapper = render();
+            $wrapper.attr('id', id);
             $control = $wrapper.find('.' + classes.input);
             setEvents($control, list);
 
@@ -51,6 +65,20 @@ define(
                     .on('click', selectValue)
                     .on('keypress', setFilter)
                     .on('keyup', updateFilter);
+
+                $(document).on('click', function (e) {
+                    if (!onListClick() && !onInputClick()) {
+                        list.hide();
+                    }
+
+                    function onListClick () {
+                        return !!$(e.target).parents('#' + list.id).length;
+                    }
+
+                    function onInputClick () {
+                        return !!$(e.target).parents('#' + id).length;
+                    }
+                });
             }
 
             function toggleList() {
@@ -113,6 +141,8 @@ define(
                 data = userData || [],
                 $that;
 
+            that.id = guid();
+
             that.isShown = false;
 
             that.render = function (width) {
@@ -132,7 +162,8 @@ define(
                 });
                 $wrapper
                     .html($that)
-                    .width(width);
+                    .width(width)
+                    .attr('id', that.id);
 
                 return $wrapper;
             };
