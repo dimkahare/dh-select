@@ -101,6 +101,11 @@
     width: 100%;
 }
 
+.dh-select-list li > label:hover {
+    background-color: #f4f4f4;
+    text-decoration: underline;
+}
+
 .dh-select-list .has-children > label {
     font-weight: bold;
 }
@@ -127,8 +132,6 @@
     border-bottom: none;
     border-top: 4px solid;
 }
-
-
 
 .dh-select-list .collapsed > ul {
     display: none;

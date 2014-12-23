@@ -45,6 +45,13 @@ define(
 
             that.$el = $control;
 
+            that.setValue = function (id) {
+                var value = getValueById(id, data);
+
+                $control.val(value.title);
+                list.setValue(id);
+            };
+
             function render() {
                 var $control = $('<input>', {
                         type: 'text',
@@ -230,6 +237,11 @@ define(
                 });
             };
 
+            that.setValue = function (value) {
+                $that.find('input[value="' + value + '"]')
+                    .prop('checked', true);
+            };
+
             function renderList(name, list) {
                 var $ul, $li;
 
@@ -295,22 +307,22 @@ define(
                     that.hide();
                 }
             }
+        }
 
-            function getValueById(id, data) {
-                var node,
-                    result = null;
+        function getValueById(id, data) {
+            var node,
+                result = null;
 
-                for (var i = 0; i < data.length; i++) {
-                    node = data[i];
-                    if (node.value === id) {
-                        result = node;
-                    } else if (node.childs) {
-                        result = result || getValueById(id, node.childs);
-                    }
+            for (var i = 0; i < data.length; i++) {
+                node = data[i];
+                if (node.value === id) {
+                    result = node;
+                } else if (node.childs) {
+                    result = result || getValueById(id, node.childs);
                 }
-
-                return result;
             }
+
+            return result;
         }
 
         function extend(obj1, obj2) {

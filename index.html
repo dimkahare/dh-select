@@ -52,6 +52,7 @@
                 name: 'category'
             }
         );
+        categorySelect.setValue(182);
 
         countSelect = new DhSelect(
             $('#count'),
@@ -60,6 +61,9 @@
                 name: 'count'
             }
         );
+        countSelect.setValue(2);
+
+        getFormString();
 
         categorySelect.$el.on('change', getFormString);
         countSelect.$el.on('change', getFormString);
