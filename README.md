@@ -1,9 +1,9 @@
 # Dropdown menu with search
-## Instalation
+### Instalation
 ```sh
 bower install dh-select
 ```
-## Using
+### Using
 ```js
 require(['dh-select'], function (DhSelect) {
     var categorySelect;
@@ -18,7 +18,7 @@ require(['dh-select'], function (DhSelect) {
     categorySelect.setValue(currentValue);
 });
 ```
-where ```categoriesData``` is array with object:
+where ```categoriesData``` is array with objects:
 ```js
 {
     value: 1;   
